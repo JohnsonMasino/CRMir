@@ -1,11 +1,11 @@
 #!/bin/bash
 
 echo "install dependencies"
-sudo dnf install httpd httpd-devel mariadb-devel -y
+sudo dnf install nginx mariadb-devel -y
 wget https://github.com/GrahamDumpleton/mod_wsgi/archive/refs/tags/4.9.4.tar.gz
 tar -xzvf 4.9.4.tar.gz
 cd mod_wsgi-4.9.4
-./configure --with-apxs=/usr/bin/apxs
+./configure --with-python=/path/to/your/python3
 make
 sudo make install
 sudo rm -rvf mod_wsgi-4.9.4*
@@ -16,14 +16,14 @@ echo 'installed dependencies'
 PROJECT_DIR="$1"
 DEPLOY_PATH="$3"
 
-# Set the name of your Apache configuration file (without the .conf extension)
-APACHE_CONF_FILE="$2"
+# Set the name of your Nginx configuration file (without the .conf extension)
+NGINX_CONF_FILE="$2"
 
 # Activate your virtual environment (change 'venv' to your virtual environment name)
 source "$PROJECT_DIR/venv/bin/activate"
 
-# Configure mod_wsgi and Apache
-echo "LoadModule wsgi_module modules/mod_wsgi.so" | sudo tee -a /etc/httpd/conf.modules.d/10-wsgi.conf
+# Configure mod_wsgi and Nginx
+echo "LoadModule wsgi_module modules/mod_wsgi.so" | sudo tee -a /etc/nginx/conf.d/10-wsgi.conf
 
 # Navigate to the Django project directory
 cd "$PROJECT_DIR"
@@ -39,41 +39,34 @@ python3 manage.py migrate
 # Deactivate the virtual environment
 deactivate
 
-# Create or update the Apache configuration file
-# Create or update the Apache configuration file
-sudo bash -c "echo '<VirtualHost *:80>
-    ServerName $2
-    DocumentRoot $DEPLOY_PATH
+# Create or update the Nginx configuration file
+sudo bash -c "echo 'server {
+    listen 80;
+    server_name $2;
 
-    Alias /static $DEPLOY_PATH/static
-    <Directory $DEPLOY_PATH/static>
-        Require all granted
-    </Directory>
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location /static/ {
+        root $DEPLOY_PATH;
+    }
 
-    <Directory $DEPLOY_PATH>
-        <Files wsgi.py>
-            Require all granted
-        </Files>
-    </Directory>
+    location / {
+        include proxy_params;
+        proxy_pass http://unix:$DEPLOY_PATH/myproject.sock;
+    }
 
-    WSGIProcessGroup $2
-    WSGIScriptAlias / $DEPLOY_PATH/wsgi.py
-
-    ErrorLog /var/log/httpd/$2_error.log
-    CustomLog /var/log/httpd/$2_access.log combined
-
-</VirtualHost>' > /etc/httpd/conf.d/${APACHE_CONF_FILE}.conf"
+    error_page 500 502 503 504 /500.html;
+    location = /500.html {
+        root $DEPLOY_PATH/templates/;
+    }
+}' > /etc/nginx/conf.d/${NGINX_CONF_FILE}.conf"
 
 # Set permissions, excluding .git folders
 sudo find "$DEPLOY_PATH" -type d -name '.git' -prune -o -exec chmod +rx {} +
 sudo find "$DEPLOY_PATH" -type d -name '.git' -prune -o -exec chmod -R +rX {} +
-sudo chown -R apache:apache "$DEPLOY_PATH"
+sudo chown -R nginx:nginx "$DEPLOY_PATH"
 
-# Enable Apache modules and restart the Apache service
-sudo systemctl stop httpd
-# echo "Https configuration"
-rm -fv "/etc/httpd/conf.d/$2-le-ssl.conf"
-sudo certbot --apache --expand --non-interactive --domains $2
-sudo sed -i "/WSGIProcessGroup/a WSGIDaemonProcess $2 python-home=$DEPLOY_PATH/venv python-path=$DEPLOY_PATH" "/etc/httpd/conf.d/$2-le-ssl.conf"
-sudo systemctl restart httpd
+# Enable Nginx and restart the Nginx service
+sudo systemctl enable nginx
+sudo systemctl restart nginx
+
 echo "Django application deployed successfully!"

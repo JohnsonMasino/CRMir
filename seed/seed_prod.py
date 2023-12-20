@@ -1,6 +1,4 @@
 import csv
-import decimal
-import random
 from datetime import date
 from random import randint, choice
 from django.contrib.auth.models import User
@@ -10,7 +8,6 @@ from clients.models import Client, Country, Industry
 from invoices.models import Invoice, InvoiceItem
 from payments.models import PaymentMethod, PaymentStatus, Payment
 from products.models import Product
-from quotations.models import Quotation, QuotationItem
 from faker import Faker
 import pycountry
 

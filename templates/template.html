@@ -1,0 +1,118 @@
+{% load static %}
+{% load sass_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Empire DHV {% if title %}| {{ title }}{% endif %}</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="{% static 'assets/vendors/mdi/css/materialdesignicons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendors/css/vendor.bundle.base.css' %}">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="{% static 'assets/vendors/jvectormap/jquery-jvectormap.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendors/flag-icon-css/css/flag-icon.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendors/owl-carousel-2/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendors/owl-carousel-2/owl.theme.default.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendors/select2/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendors/select2-bootstrap-theme/select2-bootstrap-theme.min.css' %}">
+
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+    {#    <link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/style.scss' %}">#}
+
+    <!-- End layout styles -->
+    <link rel="shortcut icon" href="{% static 'icon.svg' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'flatpickr.min.css' %}"/>
+    <style>
+        :disabled, .form-control[readonly] {
+            background: none !important;
+        }
+
+        .select2-container--default.select2-container--disabled .select2-selection--single {
+            background: none !important;
+            cursor: default;
+        }
+
+        .navbar .navbar-menu-wrapper .navbar-nav .nav-item.dropdown .dropdown-menu.navbar-dropdown .dropdown-item {
+            margin-bottom: 0;
+            padding: 0;
+            cursor: pointer;
+        }
+    </style>
+    {% block extra_css %}
+
+    {% endblock %}
+</head>
+<body>
+<div class="container-scroller">
+    {% include 'partials/_sidebar.html' %}
+    <div class="container-fluid page-body-wrapper">
+        {% include 'partials/_navbar.html' %}
+        <div class="main-panel">
+            <!-- content-wrapper -->
+            <div class="content-wrapper">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible">
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                {% block content %}
+                {% endblock %}
+            </div>
+            <!-- content-wrapper ends -->
+            {% include 'partials/_footer.html' %}
+        </div>
+        <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+</div>
+<!-- container-scroller -->
+<!-- plugins:js -->
+<script src="{% static 'assets/vendors/js/vendor.bundle.base.js' %}"></script>
+{#<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>#}
+
+<!-- endinject -->
+<!-- inject:js -->
+<script src="{% static 'assets/js/off-canvas.js' %}"></script>
+<script src="{% static 'assets/js/hoverable-collapse.js' %}"></script>
+<script src="{% static 'assets/js/misc.js' %}"></script>
+<script src="{% static 'assets/js/settings.js' %}"></script>
+<script src="{% static 'assets/vendors/select2/select2.min.js' %}"></script>
+<!-- endinject -->
+<script src="{% static 'flatpickr.js' %}"></script>
+<!-- Plugin js for this page -->
+{% block extra_js %}
+{% endblock %}
+<!-- End plugin js for this page -->
+
+<script type="text/javascript">
+    window.optional_config = {
+        dateFormat: 'Y-m-d',
+        defaultDate: new Date(),
+        altFormat: "F j, Y",
+        minDate: "2020-01",
+        onChange: (m) => {
+            console.log(m)
+            window.start_date = new Date(m[0]);
+            window.end_date = new Date(m[1]);
+        }
+    }
+
+    $("[type='date']").flatpickr(window.optional_config);
+
+    $(document).ready(function () {
+        $('.select2').select2({})
+    })
+</script>
+</body>
+</html>

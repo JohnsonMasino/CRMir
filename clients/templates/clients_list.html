@@ -1,0 +1,70 @@
+{% extends 'template.html' %}
+
+{% block title %}clients{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h5>Clients</h5>
+                        </div>
+                        <div class="col-sm-6 text-right">
+                            <a href="{% url 'clients:create_client' %}" class="btn btn-primary">CREATE</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="table table">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Contacts</th>
+                            <th>Address</th>
+                            <th>Company</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for client in clients %}
+                            <tr>
+                                <td>{{ client.full_name }}</td>
+                                <td>
+                                <span class="small">
+                                    <a href="mailto:{{ client.email }}">{{ client.email }}</a><br/>
+                                    <a href="tel:{{ client.phone }}">{{ client.phone }}</a>
+                                </span>
+                                </td>
+                                <td>
+                                    <small>{{ client.address }}</small>
+                                </td>
+                                <td>{{ client.company }}</td>
+                                <td>
+                                    <a href="{% url 'clients:view_client' client.id %}"
+                                       class="btn-icon">
+                                        <i class="mdi mdi-book-plus text-primary h4"></i>
+                                    </a>
+                                    <a href="{% url 'clients:update_client' client.id %}"
+                                       class="btn-icon">
+                                        <i class="mdi mdi-pen text-info h4"></i>
+                                    </a>
+                                    {#<a href="{% url 'clients:delete_client' client.id %}"#}
+                                    {#class="btn btn-danger btn-sm waves-effect waves-light"><i#}
+                                    {#class="material-icons">delete</i></a>#}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer">
+                    {% with pagination_data=clients %}
+                        {% include 'pagination.html' %}
+                    {% endwith %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

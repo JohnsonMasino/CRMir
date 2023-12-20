@@ -1,0 +1,169 @@
+{% load static %}
+{% load i18n %}
+{% load account %}
+
+{% user_display user as user_display %}
+
+<!-- partial:partials/_sidebar.html -->
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
+    <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
+        <a class="sidebar-brand brand-logo" href="/"
+           style="background: url('{% static 'empire.svg' %}');background-position: center;background-size: cover;">
+            &nbsp;
+        </a>
+        <a class=" sidebar-brand brand-logo-mini" href="/">
+            <img src="{% static 'logo.png' %}" alt=" logo"/>
+        </a>
+    </div>
+    <ul class="nav">
+        {#        <li class="nav-item profile">#}
+        {#            <div class="profile-desc">#}
+        {#                <div class="profile-pic">#}
+        {#                    <div class="count-indicator">#}
+        {#                        <img class="img-xs rounded-circle " src="{% static 'logo.png' %}" alt="">#}
+        {#                        <span class=" count bg-success"></span>#}
+        {#                    </div>#}
+        {#                    <div class="profile-name">#}
+        {#                        <h5 class="mb-0 font-weight-normal">#}
+        {#                            {% trans "Logged in as" %}:#}
+        {#                            {% blocktrans %}#}
+        {#                                {{ user_display }}#}
+        {#                            {% endblocktrans %}#}
+        {#                        </h5>#}
+        {#                    </div>#}
+        {#                </div>#}
+        {#            #}
+        {#                <a href="#" id="profile-dropdown" data-toggle="dropdown"><i class="mdi mdi-dots-vertical"></i></a>#}
+        {#                <div class="dropdown-menu dropdown-menu-right sidebar-dropdown preview-list"#}
+        {#                     aria-labelledby="profile-dropdown">#}
+        {#                    <a href="#" class="dropdown-item preview-item">#}
+        {#                        <div class="preview-thumbnail">#}
+        {#                            <div class="preview-icon bg-dark rounded-circle">#}
+        {#                                <i class="mdi mdi-settings text-primary"></i>#}
+        {#                            </div>#}
+        {#                        </div>#}
+        {#                        <div class="preview-item-content">#}
+        {#                            <p class="preview-subject ellipsis mb-1 text-small">Account settings</p>#}
+        {#                        </div>#}
+        {#                    </a>#}
+        {#                    <div class="dropdown-divider"></div>#}
+        {#                    <a href="#" class="dropdown-item preview-item">#}
+        {#                        <div class="preview-thumbnail">#}
+        {#                            <div class="preview-icon bg-dark rounded-circle">#}
+        {#                                <i class="mdi mdi-onepassword  text-info"></i>#}
+        {#                            </div>#}
+        {#                        </div>#}
+        {#                        <div class="preview-item-content">#}
+        {#                            <p class="preview-subject ellipsis mb-1 text-small">Change Password</p>#}
+        {#                        </div>#}
+        {#                    </a>#}
+        {#                    <div class="dropdown-divider"></div>#}
+        {#                    <a href="#" class="dropdown-item preview-item">#}
+        {#                        <div class="preview-thumbnail">#}
+        {#                            <div class="preview-icon bg-dark rounded-circle">#}
+        {#                                <i class="mdi mdi-calendar-today text-success"></i>#}
+        {#                            </div>#}
+        {#                        </div>#}
+        {#                        <div class="preview-item-content">#}
+        {#                            <p class="preview-subject ellipsis mb-1 text-small">To-do list</p>#}
+        {#                        </div>#}
+        {#                    </a>#}
+        {#                </div>#}
+        {#            </div>#}
+        {#        </li>#}
+        {#        <li class="nav-item nav-category">#}
+        {#            <span class="nav-link">Navigation</span>#}
+        {#        </li>#}
+        <li class="nav-item menu-items mt-3">
+            <a class="nav-link" href="/">
+              <span class="menu-icon">
+                <i class="mdi mdi-speedometer"></i>
+              </span>
+                <span class="menu-title">Dashboard</span>
+            </a>
+        </li>
+        <!-- Add new links for clients, Invoices, Quotations, and Contracts -->
+        <li class="nav-item menu-items">
+            <a class="nav-link" href="{% url 'clients:clients_list' %}">
+                <span class="menu-icon">
+                    <i class="mdi mdi-account-multiple"></i>
+                </span>
+                <span class="menu-title">Clients</span>
+            </a>
+        </li>
+        <li class="nav-item menu-items">
+            <a class="nav-link" href="{% url 'invoices:invoices_list' %}">
+                <span class="menu-icon">
+                    <i class="mdi mdi-file-document"></i>
+                </span>
+                <span class="menu-title">Invoices</span>
+            </a>
+        </li>
+        <li class="nav-item menu-items">
+            <a class="nav-link" href="{% url 'quotations:quotations_list' %}">
+                <span class="menu-icon">
+                    <i class="mdi mdi-file-document-outline"></i>
+                </span>
+                <span class="menu-title">Quotations</span>
+            </a>
+        </li>
+        <li class="nav-item menu-items">
+            <a class="nav-link" href="{% url 'contracts:contracts_list' %}">
+                <span class="menu-icon">
+                    <i class="mdi mdi-file-pdf-box"></i>
+                </span>
+                <span class="menu-title">Contracts</span>
+            </a>
+        </li>
+
+        <li class="nav-item menu-items">
+            <a class="nav-link" href="{% url 'payments:payment_list' %}">
+                <span class="menu-icon">
+                    <i class="mdi mdi-file-pdf-box"></i>
+                </span>
+                <span class="menu-title">Payments</span>
+            </a>
+        </li>
+
+
+        <li class="nav-item menu-items">
+            <a class="nav-link" href="{% url 'projects:project_list' %}">
+                <span class="menu-icon">
+                    <i class="mdi mdi-file-pdf-box"></i>
+                </span>
+                <span class="menu-title">Projects</span>
+            </a>
+        </li>
+
+        <li class="nav-item menu-items">
+            <a class="nav-link" href="{% url 'products:products_list' %}">
+                <span class="menu-icon">
+                    <i class="mdi mdi-file-pdf-box"></i>
+                </span>
+                <span class="menu-title">Products</span>
+            </a>
+        </li>
+
+        <li class="nav-item menu-items">
+            <a class="nav-link" href="{% url 'talents:talent_list' %}">
+                <span class="menu-icon">
+                    <i class="mdi mdi-file-pdf-box"></i>
+                </span>
+                <span class="menu-title">Talents</span>
+            </a>
+        </li>
+
+
+        <li class="nav-item menu-items">
+            <a class="nav-link" href="{% url 'settings:settings' %}">
+                <span class="menu-icon">
+                    <i class="mdi mdi-settings"></i>
+                </span>
+                <span class="menu-title">settings</span>
+            </a>
+        </li>
+
+    </ul>
+</nav>
+<!-- partial -->
+

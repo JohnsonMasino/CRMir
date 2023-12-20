@@ -1,0 +1,41 @@
+{% extends 'template.html' %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <span>Talents</span>
+            <div class="float-right">
+                <a href="{% url 'talents:talent_create' %}" class="btn btn-primary">Create New Talent</a>
+            </div>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover table-condensed">
+                <thead>
+                <tr>
+                    <th>Full Name</th>
+                    <th>Email Address</th>
+                    <th>Phone Number</th>
+                    <th>Address</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for talent in talents %}
+                    <tr>
+                        <td>{{ talent.full_name }}</td>
+                        <td>{{ talent.email_address }}</td>
+                        <td>{{ talent.phone_number }}</td>
+                        <td>{{ talent.address }}</td>
+                        <td>
+                            <a href="{% url 'talents:talent_update' talent.id %}"
+                               class="btn btn-sm btn-primary">Edit</a>
+                            <a href="{% url 'talents:talent_delete' talent.id %}" class="btn btn-sm btn-danger"
+                               onclick="return confirm('Are you sure you want to delete this talent?')">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

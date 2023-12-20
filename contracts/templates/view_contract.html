@@ -1,0 +1,26 @@
+{% extends 'template.html' %}
+
+{% block title %}View Contract{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body align-content-center">
+                    <h2>Contract Details</h2>
+                    <p><strong>Contract Reference:</strong>
+                        {{ contract.contract_reference }}</p>
+                    <p><strong>Expiration Date:</strong> {{ contract.contract_expiration_date }}</p>
+                    <p><strong>Status:</strong> {{ contract.contract_status }}</p>
+                    <p><strong>Invoice:</strong> {{ contract.invoice }}</p>
+
+                    <!-- Add any additional fields you want to display here -->
+
+                    <a href="{% url 'contracts:update_contract' contract.id %}" class="btn btn-warning">Update</a>
+                    <a href="{% url 'contracts:delete_contract' contract.id %}" class="btn btn-danger">Delete</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

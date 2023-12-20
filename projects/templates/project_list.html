@@ -1,0 +1,40 @@
+{% extends 'template.html' %}
+
+{% block title %}Project List{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header">
+                Project List
+                <a href="{% url 'projects:create_project' %}" class="btn btn-primary float-right">Create</a>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Client</th>
+                        <th>Description</th>
+                        <th>Award Points</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for project in projects %}
+                        <tr>
+                            <td>{{ project.client }}</td>
+                            <td>{{ project.description }}</td>
+                            <td>{{ project.award_points }}</td>
+                            <td>
+                                <a href="{% url 'projects:update_project' project.id %}" class="btn btn-sm btn-primary">Edit</a>
+                                <a href="{% url 'projects:talent_list' project.id %}" class="btn btn-sm btn-info">View
+                                    Talents</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

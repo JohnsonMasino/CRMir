@@ -1,0 +1,36 @@
+{% extends 'template.html' %}
+
+{% block title %}Talent List{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">Talent List for Project "{{ project.client.full_name }}" - {{ project.expected_date }}
+            <a href="{% url 'projects:create_talent' project.id %}" class="btn btn-primary float-right">Add Talent</a>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Role</th>
+                    <th>Award Points</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for talent in talents %}
+                    <tr>
+                        <td>{{ talent.talents }}</td>
+                        <td>{{ talent.award_points }}</td>
+                        <td>{{ talent.award_points }}</td>
+                        <td>
+                            <a href="{% url 'projects:update_talent' talent.id %}" class="btn btn-sm btn-primary">Edit</a>
+                            <a href="{% url 'projects:delete_talent' talent.id %}" class="btn btn-sm btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

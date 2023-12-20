@@ -1,0 +1,22 @@
+{% extends 'template.html' %}
+
+{% block content %}
+    <div class="container mt-4">
+        <form method="post">
+            <div class="card">
+                <div class="card-header">
+                    <h1>Talent Form</h1>
+                </div>
+                <div class="card-body">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+
+{% endblock %}

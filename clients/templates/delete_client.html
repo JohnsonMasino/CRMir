@@ -1,0 +1,18 @@
+{% extends 'template.html' %}
+
+{% block content %}
+    <div class="mt-4">
+        <div class="card">
+            <div class="card-content">
+                <h5 class="card-title">Delete Client</h5>
+                <p>Are you sure you want to delete "{{ client.name }}"?</p>
+                <form method="post" action="{% url 'clients:delete_client' client.id %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-danger float-right">Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

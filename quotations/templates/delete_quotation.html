@@ -1,0 +1,39 @@
+{% extends 'template.html' %}
+
+{% block title %}Delete Quotation{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <span>Delete Quotation</span>
+        </div>
+        <div class="card-body">
+            <p>Are you sure you want to delete the following quotation?</p>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Quotation Reference</th>
+                    <th>Quotation Date</th>
+                    <th>Client</th>
+                    <th>Total Amount</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{{ quotation.quotation_reference }}</td>
+                    <td>{{ quotation.quotation_date }}</td>
+                    <td>{{ quotation.client }}</td>
+                    <td>${{ quotation.total_amount }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+            <form method="post" class="float-right">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Confirm Deletion</button>
+                <a href="{% url 'quotations:view_quotation' quotation.id %}" class="btn btn-default">Cancel</a>
+            </form>
+        </div>
+    </div>
+{% endblock %}

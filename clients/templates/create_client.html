@@ -1,0 +1,30 @@
+{% extends 'template.html' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12 mx-auto">
+            <form method="post">
+                {% csrf_token %}
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Client</h5>
+                    </div>
+                    <div class="card-body">
+                        {% for field in form %}
+
+                            <div class="form-group">
+                                <label for="{{ field.id_for_label }}">{{ field.label_tag }}</label>
+                                {{ field }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="card-footer">
+                        <div class="form-group">
+                            <button class="btn btn-primary float-right" type="submit">Create</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,77 @@
+{% load i18n %}
+{% load static %}
+<html lang="en">
+<head>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Empire DHV {% block head_title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'assets/vendors/mdi/css/materialdesignicons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendors/css/vendor.bundle.base.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+    <link rel="shortcut icon" href="{% static 'icon.svg' %}"/>
+    {% block extra_css %}
+
+    {% endblock %}
+    {% block extra_head %}
+    {% endblock %}
+</head>
+<body>
+<div class="container-scroller">
+    <div class="container-fluid page-body-wrapper full-page-wrapper">
+
+        <div class="row w-100 m-0">
+            <div class="content-wrapper full-page-wrapper d-flex align-items-center auth login-bg">
+                <div class="card col-lg-4 mx-auto">
+                    <div class="card-body px-5 py-5">
+
+                        {% block body %}
+
+                            {% if messages %}
+                                <div>
+                                    <strong>{% trans "Messages:" %}</strong>
+                                    <ul>
+                                        {% for message in messages %}
+                                            <li>{{ message }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+
+                            {#            NOT NECESSARY TO INCLUDE HERE#}
+                            {#            <div>#}
+                            {#                <strong>{% trans "Menu:" %}</strong>#}
+                            {#                <ul>#}
+                            {#                    {% if user.is_authenticated %}#}
+                            {#                        <li><a href="{% url 'account_email' %}">{% trans "Change E-mail" %}</a></li>#}
+                            {#                        <li><a href="{% url 'account_logout' %}">{% trans "Sign Out" %}</a></li>#}
+                            {#                    {% else %}#}
+                            {#                        <li><a href="{% url 'account_login' %}">{% trans "Sign In" %}</a></li>#}
+                            {#                        <li><a href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a></li>#}
+                            {#                    {% endif %}#}
+                            {#                </ul>#}
+                            {#            </div>#}
+
+                            {% block content %}
+                            {% endblock %}
+                        {% endblock %}
+                        {% block extra_body %}
+                        {% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{% static 'assets/vendors/js/vendor.bundle.base.js' %}"></script>
+{% block extra_js %}
+{% endblock %}
+<script src="{% static 'assets/js/off-canvas.js' %}"></script>
+<script src="{% static 'assets/js/hoverable-collapse.js' %}"></script>
+<script src="{% static 'assets/js/misc.js' %}"></script>
+<script src="{% static 'assets/js/settings.js' %}"></script>
+<script src="{% static 'assets/js/todolist.js' %}"></script>
+
+</body>
+</html>

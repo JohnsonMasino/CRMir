@@ -1,0 +1,24 @@
+{% extends 'template.html' %}
+
+{% block title %}Add Talent to Project{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <form method="post" class="form-horizontal">
+        {% csrf_token %}
+        <div class="card">
+            <div class="card-header">Add Talent to Project</div>
+            <div class="card-body">
+                <h4>Project: {{ project.client.full_name }}</h4>
+                {{ form.as_p }}
+            </div>
+            <div class="card-footer">
+                <div class="float-right">
+                    <button type="submit" class="btn btn-primary">Add Talent</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+</div>
+{% endblock %}

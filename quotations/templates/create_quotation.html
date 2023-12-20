@@ -1,0 +1,163 @@
+{% extends 'template.html' %}
+{% load static %}
+
+{% block title %}Create Quotation{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+
+        <form method="post" class="form-horizontal">
+            <div class="card">
+                <div class="card-header">Create Quotation</div>
+                <div class="card-body">
+
+                    {% csrf_token %}
+                    {{ form.as_p }}
+
+
+                    <!-- Quotation items -->
+                    <div class="form-group">
+                        <table class="table table-striped table-bordered" id="quotationItemsTable">
+                            <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Unit Price</th>
+                                <th>Total Price</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for quotation_item in quotation_items %}
+
+                                <tr>
+                                <td>
+                                    <select class="form-control product-select" name="product_{{ quotation_item.id }}"
+                                            required>
+                                        <option value="" selected disabled>Choose a product</option>
+                                        {% for product in products %}
+                                            <option value="{{ product.id }}"
+                                                    {% if product.id == quotation_item.product.id %}
+                                                    selected="selected" {% endif %}
+                                                    data-unit-cost="{{ product.unit_cost }}">
+                                                {{ product.product_name }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td><input type="number" min="1" class="form-control quantity-input"
+                                           name="quantity_{{ quotation_item.id }}" value="{{ quotation_item.quantity }}"
+                                           required></td>
+                                <td><input type="number" step="0.01" min="0" class="form-control unit-price-input"
+                                           name="unit_price_{{ quotation_item.id }}"
+                                           value="{{ quotation_item.unit_price }}" required></td>
+                                <td><input type="text" class="form-control total-price-input"
+                                           name="total_price_{{ quotation_item.id }}" readonly
+                                           value="{{ quotation_item.total_price }}"></td>
+                                <td>
+                                    <button type="button" class="btn btn-small btn-danger delete-row">Delete</button>
+                                </td>
+
+                            {% endfor %}
+
+                            <tr data-row-id="0">
+                                <td>
+                                    <select class="form-control product-select" name="product_0" required>
+                                        <option value="" selected disabled>Choose a product</option>
+                                        {% for product in products %}
+                                            <option value="{{ product.id }}" data-unit-cost="{{ product.unit_cost }}">
+                                                {{ product.product_name }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="number" min="1" class="form-control quantity-input" name="quantity_0"
+                                           value="1" required>
+                                </td>
+                                <td><input type="number" step="0.01" min="0" class="form-control unit-price-input"
+                                           name="unit_price_0" required></td>
+                                <td><input type="text" class="form-control total-price-input" name="total_price_0"
+                                           readonly></td>
+                                <td>
+                                    <button type="button" class="btn btn-small btn-danger delete-row">Delete</button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <br/>
+                        <button type="button" class="btn btn-small btn-primary" id="add-row">Add Row</button>
+                    </div>
+
+                </div>
+                <div class="card-footer">
+                    <div class="float-right">
+                        <button type="submit" class="btn btn-primary">Create Quotation</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+
+{% endblock %}
+
+{% block extra_js %}
+
+    <script type="text/javascript">
+
+        // Set the initial value of rowCounter to 0
+        let rowCounter = 0;
+
+        // Use the value of quotation_items.count to set the starting row index if it exists
+        {% if quotation_items.count %}
+            rowCounter = {{ quotation_items.count }};
+        {% endif %}
+
+        function updateTotalPrice(rowNumber) {
+            const quantity = parseFloat($('[name="quantity_' + rowNumber + '"]').val());
+            const unitPrice = parseFloat($('[name="unit_price_' + rowNumber + '"]').val());
+            const totalPrice = quantity * unitPrice;
+            $('[name="total_price_' + rowNumber + '"]').val(totalPrice.toFixed(2));
+        }
+
+        $(document).on("click", ".delete-row", function () {
+            $(this).closest("tr").remove();
+        });
+
+        $("#add-row").on("click", function () {
+            const tableBody = $("#quotationItemsTable tbody");
+            const lastRow = tableBody.find("tr:last");
+            const newRow = lastRow.clone();
+
+            // Update the IDs and names of input fields in the new row
+            rowCounter++;
+            newRow.find(".product-select").attr("name", "product_" + rowCounter).val("");
+            newRow.find(".quantity-input").attr("name", "quantity_" + rowCounter).val("1");
+            newRow.find(".unit-price-input").attr("name", "unit_price_" + rowCounter).val("");
+            newRow.find(".total-price-input").attr("name", "total_price_" + rowCounter).val("");
+            newRow.appendTo(tableBody);
+        });
+
+        // Update total price when quantity or unit price changes
+        $(document).on("input", ".quantity-input, .unit-price-input", function () {
+            const rowNumber = $(this).closest("tr").index();
+            updateTotalPrice(rowNumber);
+        });
+
+        // Autofill unit cost when changing product
+        $(document).on("change", ".product-select", function () {
+            const unitCost = parseFloat($(this).find(":selected").data("unit-cost"));
+            const rowNumber = $(this).closest("tr").index();
+            dat = $('[name="unit_price_' + rowNumber + '"]').val(unitCost);
+            console.log('[name="unit_price_' + rowNumber + '===' + unitCost + '"]')
+            updateTotalPrice(rowNumber);
+        });
+
+        // Trigger the change event on unit price or quantity change
+        $(document).on("change", ".quantity-input, .unit-price-input", function () {
+            const rowNumber = $(this).closest("tr").index();
+            updateTotalPrice(rowNumber);
+        });
+    </script>
+{% endblock %}

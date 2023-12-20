@@ -1,0 +1,159 @@
+{% extends 'template.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block extra_css %}
+    <link href="{% static invoice_theme %}" rel="stylesheet" type="text/css"/>
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <div class="float-right">
+                <a href="{% url 'payments:make_payment' invoice.id %}" class="btn btn-primary">Make Payment</a>
+                <a href="{% url 'contracts:create_contract' invoice.id %}" class="btn btn-dark">
+                    Make Contract
+                </a>
+                <a href="{% url 'invoices:send_invoice_email' invoice.id %}" class="btn btn-primary">Send Invoice Email</a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="tm_container">
+                <div class="tm_invoice_wrap">
+                    <div class="tm_invoice tm_style2" id="tm_download_section">
+                        <div class="tm_invoice_in">
+                            <div class="tm_invoice_content">
+                                <div class="tm_invoice_head tm_mb10 tm_border_none">
+                                    <div class="tm_invoice_left">
+                                        <div class="tm_logo"><img src="{% static 'empire-dhv-logo.png' %}" alt="Logo">
+                                        </div>
+                                    </div>
+                                    <div class="tm_invoice_right tm_text_right">
+                                        <b class="tm_f30 tm_medium tm_primary_color">Invoice</b>
+                                        <p class="tm_m0"><b class="tm_medium tm_primary_color">Invoice
+                                            No:</b> {{ invoice_number }}</p>
+                                        <p class="tm_m0"><b
+                                                class="tm_medium tm_primary_color">Date:</b> {{ invoice.invoice_date }}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="tm_grid_row tm_col_2 tm_invoice_info_in tm_round_border tm_mb30">
+                                    <div class="tm_border_right tm_border_none_sm">
+                                        <p class="tm_mb2"><b class="tm_primary_color">Invoice To:</b></p>
+                                        <p class="tm_m0">
+                                            {{ invoice.quotation.client.full_name }} <br>
+                                            {{ invoice.quotation.client.address }}
+                                            <br>
+                                            <br>
+                                            {{ invoice.quotation.client.email }} <br>
+                                            {{ invoice.quotation.client.phone }}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <p class="tm_mb2"><b class="tm_primary_color">Pay To:</b></p>
+                                        <p class="tm_m0">
+                                            {{ company_name }} <br>
+                                            {{ company_address }} <br>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="tm_table tm_style1">
+                                    <div class="tm_round_border">
+                                        <div class="tm_table_responsive">
+                                            <table>
+                                                <thead>
+                                                <tr>
+                                                    <th class="tm_width_6 tm_semi_bold tm_primary_color tm_gray_bg">
+                                                        Description
+                                                    </th>
+                                                    <th class="tm_width_2 tm_semi_bold tm_primary_color tm_gray_bg">
+                                                        Price
+                                                    </th>
+                                                    <th class="tm_width_2 tm_semi_bold tm_primary_color tm_gray_bg">
+                                                        Qty
+                                                    </th>
+                                                    <th class="tm_width_2 tm_semi_bold tm_primary_color tm_gray_bg tm_text_right">
+                                                        Amount
+                                                    </th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% for item in invoice_items %}
+                                                    <tr>
+                                                        <td class="tm_width_6">
+                                                            <b>{{ item.product.product_name }}</b><br/>
+                                                            {{ item.product.product_description }}
+                                                        </td>
+                                                        <td class="tm_width_2">{{ item.unit_price }}</td>
+                                                        <td class="tm_width_2">{{ item.quantity }}</td>
+                                                        <td class="tm_width_2 tm_text_right">{{ item.total_price | intcomma }}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="tm_invoice_footer tm_mb15">
+                                        <div class="tm_left_footer">
+                                            <p class="tm_mb2"><b class="tm_primary_color">Payment info:</b></p>
+                                            <p class="tm_m0">
+                                                {{ invoice.client.name }}
+                                                <br>
+                                                <br>Amount: {{ invoice.total_amount |  intcomma }}</p>
+                                        </div>
+                                        <div class="tm_right_footer">
+                                            <table class="tm_mb15">
+                                                <tbody>
+                                                <tr>
+                                                    <td class="tm_width_3 tm_primary_color tm_border_none tm_bold">
+                                                        Subtotal
+                                                    </td>
+                                                    <td class="tm_width_3 tm_primary_color tm_text_right tm_border_none tm_bold">{{ total_amount | intcomma }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="tm_width_3 tm_danger_color tm_border_none tm_pt0">
+                                                        Discount {{ discount | stringformat:".2d" | intcomma }} %
+                                                    </td>
+                                                    <td class="tm_width_3 tm_danger_color tm_text_right tm_border_none tm_pt0">{{ discount_amount|stringformat:".2f"|intcomma }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="tm_width_3 tm_primary_color tm_border_none tm_pt0">Tax
+                                                        {{ tax | stringformat:".2d" | intcomma }} %
+                                                    </td>
+                                                    <td class="tm_width_3 tm_primary_color tm_text_right tm_border_none tm_pt0">{{ tax_amount | stringformat:".2f"|intcomma }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="tm_width_3 tm_border_top_0 tm_bold tm_f18 tm_primary_color tm_gray_bg tm_radius_6_0_0_6">
+                                                        Grand Total
+                                                    </td>
+                                                    <td class="tm_width_3 tm_border_top_0 tm_bold tm_f18 tm_primary_color tm_text_right tm_gray_bg tm_radius_0_6_6_0">
+                                                        {{ grand_total | stringformat:".2f" | intcomma }}
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tm_note tm_text_center tm_font_style_normal">
+                                    <hr class="tm_mb15">
+                                    <p class="tm_mb2"><b class="tm_primary_color">Terms &amp; Conditions:</b></p>
+                                    <p class="tm_m0">The Company reserves the right, at its discretion, to change,
+                                        modify, add, or remove <br>portions of these Terms at any time by posting the
+                                        amended Terms.</p>
+                                </div><!-- .tm_note -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            {# // actions to convert to contract #}
+            <a href="{% url 'payments:make_payment' invoice.id %}" class="btn btn-primary">Make Payment</a>
+            <a href="{% url 'contracts:create_contract' invoice.id %}" class="btn btn-dark">
+                Make Contract
+            </a>
+        </div>
+    </div>
+{% endblock %}

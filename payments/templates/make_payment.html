@@ -1,0 +1,105 @@
+{% extends 'template.html' %}
+
+{% block title %}Make Payment{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Make Payment</h5>
+            </div>
+            <div class="card-body">
+                <form method="post" id="paymentForm"> {# Add an ID to the form #}
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <input type="hidden" id="id_total_amount"/>
+                    <button type="submit" class="btn btn-primary">Make Payment</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $(document).ready(function () {
+            // Function to update the balance amount based on the payment amount
+            if('{{ invoice_id }}'){
+                alert({{ invoice_id }})
+                $('#id_invoice').attr('disabled','true').val({{invoice_id}});
+            }
+            function updateBalance() {
+                const paymentAmount = parseFloat($('#id_amount').val());
+                const totalAmount = parseFloat($('#id_total_amount').val());
+
+                let balance = totalAmount - paymentAmount;
+                if (balance < 0) {
+                    $('#balance_label').text('Credits:');
+                } else {
+                    $('#balance_label').text('Balance:');
+                }
+                $('#id_balance').val(balance);
+            }
+
+            function fetchTotalAmount(selectedInvoiceId) {
+                const ajaxUrl = '/payments/calculate_total_amount/' + selectedInvoiceId + '/';
+                $.ajax({
+                    url: ajaxUrl,
+                    data: {invoice_id: selectedInvoiceId},
+                    success: function (data) {
+                        const totalAmount = data.total_amount;
+                        $('#id_total_amount').val(totalAmount);
+                        $('#id_amount').val(totalAmount);
+                        updateBalance();
+                    }
+                });
+            }
+
+            // Fetch the initial total amount for the selected invoice
+            const selectedInvoiceId = $('#id_invoice').val();
+            fetchTotalAmount(selectedInvoiceId);
+
+            // Update the total amount whenever a new invoice is selected from the dropdown
+            $('#id_invoice').on('change', function () {
+                const selectedInvoiceId = $(this).val();
+                fetchTotalAmount(selectedInvoiceId);
+            });
+
+            // Update the balance amount whenever the payment amount is changed
+            $('#id_amount').on('input', function () {
+                updateBalance();
+            });
+
+            // Submit the form via AJAX
+            $('#paymentForm').on('submit', function (event) {
+                event.preventDefault(); // Prevent normal form submission
+
+                $.ajax({
+                    url: '{% url "payments:make_payment" %}', // Replace with your form submission URL
+                    type: 'POST',
+                    data: $(this).serialize(), // Serialize the form data
+                    success: function (data) {
+                        // Display SweetAlert with the response message
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Payment Successful!',
+                            text: data,
+                        }).then(function () {
+                            // Redirect to the payments list page after the alert is closed
+                            window.location.href = '{% url "payments:payment_list" %}'; // Replace with your payments list URL
+                        });
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        // Display SweetAlert with the error message
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Payment Error',
+                            text: 'An error occurred while making the payment. Please try again.',
+                        });
+                    },
+                });
+            });
+        });
+    </script>
+{% endblock %}

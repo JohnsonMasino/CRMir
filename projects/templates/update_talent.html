@@ -1,0 +1,14 @@
+{% extends 'template.html' %}
+
+{% block title %}Update Talent{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h1>Edit Talent</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
+        </form>
+    </div>
+{% endblock %}

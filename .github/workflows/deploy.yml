@@ -1,0 +1,81 @@
+name: Django Deploy CD
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:     
+      - name: Clone repository and prepare project folder
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            sudo rm -rvf ${{ secrets.DEPLOY_PATH }}
+            git clone ${{ secrets.REPO_URL }} ${{ secrets.PROJECT_PATH }}
+
+      - name: Setup Virtual Environment
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd ${{ secrets.PROJECT_PATH }} &&
+            echo "Virtual environment configuration"
+            rm -rvf "${{ secrets.PROJECT_PATH }}/venv"
+            echo "Creating ... " &&
+            python3 -m venv "${{ secrets.PROJECT_PATH }}/venv" &&
+            echo "created."
+            echo "Virtual environment done."
+
+      - name: Configure and deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd ${{ secrets.PROJECT_PATH }}          
+            echo "chmod u+x" &&
+            chmod u+x deploy_script.sh &&
+            echo "chmod completed"
+            
+            source venv/bin/activate &&
+            pip install --upgrade pip &&
+            pip install -r requirements.txt
+
+      - name: Move files to server root
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            sudo mv ${{ secrets.PROJECT_PATH }} ${{ secrets.DEPLOY_PATH }} 
+            echo "Virtual environment completed."
+
+      - name: Clean up and reconfigure httpd
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            echo "Clean up code."
+            rm -rvf "${{ secrets.PROJECT_PATH }}"          
+            cd ${{ secrets.DEPLOY_PATH }}
+            echo "RUN migrations "
+            # activate virtual environment and execute migrations
+            source venv/bin/activate
+            echo "Wait for 3 seconds"
+            sleep 3 
+            echo "Running database update"
+            python manage.py migrate
+            python manage.py runscript seed.seed_prod.py
+            echo "DONE!"
+            

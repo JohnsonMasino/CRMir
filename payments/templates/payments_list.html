@@ -1,0 +1,53 @@
+{% extends 'template.html' %}
+{% load static %}
+
+{% block title %}Payment List{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">Payment List</span>
+                <div class="float-right">
+                    <a href="{% url 'payments:make_payment' %}" class="btn btn-primary">
+                        Add Payment
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="table table-hover table-condensed">
+                    <thead>
+                    <tr>
+                        <th>Invoice</th>
+                        <th>Amount</th>
+                        <th>Payment Method</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for payment in payments %}
+                        <tr>
+                            <td>{{ payment.invoice }}</td>
+                            <td>{{ payment.amount }}</td>
+                            <td>{{ payment.get_payment_method_display }}</td>
+                            <td>{{ payment.get_reconciled_display }}</td>
+                            <td>
+                                <a href="{% url 'payments:reconcile_payment' payment.id %}"
+                                   class="btn btn-success btn-sm">Reconcile</a>
+                                <a href="{% url 'payments:resend_payment' payment.id %}" class="btn btn-primary btn-sm">Resend</a>
+                                <a href="{% url 'payments:reverse_payment' payment.id %}" class="btn btn-danger btn-sm">Reverse</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer">
+                {% with pagination_data=payments %}
+                    {% include 'pagination.html' %}
+                {% endwith %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

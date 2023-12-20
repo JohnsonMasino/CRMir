@@ -1,0 +1,90 @@
+{% extends 'template.html' %}
+
+{% block title %}Create Invoice{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">Create Invoice</div>
+        <div class="card-body">
+            <form method="post" class="form-horizontal">
+                {% csrf_token %}
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">Quotation Reference:</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" value="{{ quotation.quotation_reference }}"
+                                       readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">Quotation Date:</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" value="{{ quotation.quotation_date }}" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">client:</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" value="{{ quotation.client }}" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                       {{ form.as_p }}
+                    </div>
+                </div>
+                <!-- Quotation information -->
+
+
+                <!-- Invoice items -->
+                <div class="form-group card-panel">
+                    <p class="row">Invoice Items:</p>
+                    <div class="col-md-12">
+                        <table class="table table-condensed table-hover" id="invoiceItemsTable">
+                            <thead>
+                            <tr class="hoverable m1">
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Unit Price</th>
+                                <th>Total Price</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for quotation_item in quotation_items %}
+                                <tr class="hoverable">
+                                    <td>
+                                        {{ quotation_item.product }}
+                                    </td>
+                                    <td>
+                                        {{ quotation_item.quantity }}
+                                    </td>
+                                    <td>
+                                        {{ quotation_item.unit_price }}
+                                    </td>
+                                    <td>
+                                        {{ quotation_item.total_price }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Submit button -->
+                <div class="form-group">
+                    <br/>
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-success">Generate
+                            Invoice
+                        </button>
+                    </div>
+                    <br/>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

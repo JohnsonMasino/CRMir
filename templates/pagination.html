@@ -1,0 +1,38 @@
+<!-- Pagination -->
+<ul class="pagination center-align">
+    {% if pagination_data.has_previous %}
+        <li>
+            <a href="?page=1"><i class="mdi mdi-page-first"></i></a>
+        </li>
+        <li>
+            <a href="?page={{ pagination_data.previous_page_number }}"><i class="mdi mdi-chevron-left"></i></a>
+        </li>
+    {% else %}
+        <li class="disabled">
+            <a><i class="mdi mdi-page-first"></i></a>
+        </li>
+        <li class="disabled">
+            <a><i class="mdi mdi-chevron-left"></i></a>
+        </li>
+    {% endif %}
+
+    <li class="disabled">
+        <a>Page {{ pagination_data.number }} of {{ pagination_data.paginator.num_pages }}</a>
+    </li>
+
+    {% if pagination_data.has_next %}
+        <li>
+            <a href="?page={{ pagination_data.next_page_number }}"><i class="mdi mdi-chevron-right"></i></a>
+        </li>
+        <li>
+            <a href="?page={{ pagination_data.paginator.num_pages }}"><i class="mdi mdi-page-last"></i></a>
+        </li>
+    {% else %}
+        <li class="disabled">
+            <a><i class="mdi mdi-chevron-right"></i></a>
+        </li>
+        <li class="disabled">
+            <a><i class="mdi mdi-page-last"></i></a>
+        </li>
+    {% endif %}
+</ul>

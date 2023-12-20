@@ -1,0 +1,71 @@
+{% extends "account/base.html" %}
+{% load widget_tweaks %}
+{% load i18n %}
+{% load account socialaccount %}
+
+{% block head_title %}
+    {% trans "Sign In" %}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        {% get_providers as socialaccount_providers %}
+        {% if socialaccount_providers %}
+            {#            <p>#}
+            {#                {% blocktrans with site.name as site_name %}#}
+            {#                    Please sign in with one of your existing third party accounts. Or,#}
+            {#                    <a href="{{ signup_url }}">sign up</a>#}
+            {#                    for a {{ site_name }} account and sign in below:#}
+            {#                {% endblocktrans %}#}
+            {#            </p>#}
+            {#            <div class="socialaccount_ballot">#}
+            {#                {% include "socialaccount/snippets/provider_list.html" with process="login" %}#}
+            {#                <div class="login-or">{% trans 'or' %}</div>#}
+            {#            </div>#}
+
+            {% include "socialaccount/snippets/login_extra.html" %}
+
+        {% else %}
+            <div class="col-md-12  alert alert-danger">
+                <div class="align-center">
+                    {% blocktrans %}
+                        If you have not created an account yet, then
+                        please <a href="{{ signup_url }}">sign up</a> first.
+                    {% endblocktrans %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    <h3 class="card-title text-left mb-3">{% trans "Sign In" %}</h3>
+    <form method="POST" action="{% url 'account_login' %}">
+        {% csrf_token %}
+        {% for fm in form %}
+            {% if fm.label == 'Remember Me' %}
+                <div class="form-group d-flex align-items-center justify-content-between">
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            {{ fm | attr:"class:form-check-input" }}
+                            {{ fm.label }}
+                        </label>
+                    </div>
+                    <a class="forgot-pass secondaryAction"
+                       href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+                </div>
+            {% else %}
+                <div class="form-group">
+                    <label for="id_username">{{ fm.label }}</label>
+                    {{ fm | attr:"class:form-control form-control-sm" }}
+                </div>
+            {% endif %}
+
+        {% endfor %}
+
+        {% if redirect_field_value %}
+            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+        {% endif %}
+        <button class="primaryAction btn btn-primary btn-block"
+                type="submit">
+            {% trans "Sign In" %}
+        </button>
+    </form>
+{% endblock %}

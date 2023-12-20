@@ -1,0 +1,24 @@
+{% extends 'template.html' %}
+
+{% block title %}Contract Details{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Contract Details for Invoice #{{ invoice.id }}</h5>
+            </div>
+            <div class="card-body">
+                <form method="post" class="form-horizontal">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-primary">Create Contract</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

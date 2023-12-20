@@ -1,0 +1,42 @@
+{% extends 'template.html' %}
+
+{% block title %}View Client{% endblock %}
+
+{% block content %}
+    <div class="col-md-12 mt-4">
+
+        <div class="card">
+            <div class="card-header">Client Details</div>
+            <div class="card-body">
+                <table class="table table-hover table-condensed">
+                    <tr>
+                        <th>Name</th>
+                        <td>{{ client.full_name }}</td>
+                    </tr>
+                    <tr>
+                        <th>Email</th>
+                        <td>{{ client.email }}</td>
+                    </tr>
+                    <tr>
+                        <th>Phone</th>
+                        <td>{{ client.phone }}</td>
+                    </tr>
+                    <tr>
+                        <th>Address</th>
+                        <td>{{ client.address }}</td>
+                    </tr>
+                    <tr>
+                        <th>Company</th>
+                        <td>{{ client.brand_name }}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="card-footer">
+                <div class="float-right">
+                    <a href="{% url 'clients:update_client' client.id %}" class="btn btn-warning">Update</a>
+                    <a href="{% url 'clients:delete_client' client.id %}" class="btn btn-danger">Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

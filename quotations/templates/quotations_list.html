@@ -1,0 +1,65 @@
+{% extends 'template.html' %}
+
+{% block title %}Quotations{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <h6 class="card-subtitle text-muted">Quotations</h6>
+                    </div>
+                    <div class="col-12 col-md-6 text-md-right">
+                        <a href="{% url 'quotations:create_quotation' %}" class="btn btn-primary">CREATE</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-condensed ">
+                        <thead>
+                        <tr>
+                            <th>Quotation Reference</th>
+                            <th>Quotation Date</th>
+                            <th>Client</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for quotation in quotations %}
+                            <tr>
+                                <td>{{ quotation.quotation_reference }}</td>
+                                <td>{{ quotation.quotation_date }}</td>
+                                <td>{{ quotation.client.name }}</td>
+                                <td>
+                                    <!-- Icon buttons -->
+                                    <a href="{% url 'quotations:view_quotation' quotation.id %}"
+                                       class="btn btn-sm btn-info" title="View">
+                                        <i class="mdi mdi-eye"></i>
+                                    </a>
+                                    <a href="{% url 'invoices:create_invoice' quotation.id %}"
+                                       class="btn btn-sm btn-success" title="Create Invoice">
+                                        <i class="mdi mdi-plus"></i>
+                                    </a>
+
+                                    <a href="{% url 'quotations:delete_quotation' quotation.id %}"
+                                       class="btn btn-sm btn-danger" title="Delete">
+                                        <i class="mdi mdi-trash-can"></i>
+                                    </a>
+
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer">
+                {% with pagination_data=quotations %}
+                    {% include 'pagination.html' %}
+                {% endwith %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

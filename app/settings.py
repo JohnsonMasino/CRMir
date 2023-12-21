@@ -102,11 +102,11 @@ WSGI_APPLICATION = 'app.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'dhv',
+        'NAME': 'office',
         'USER': 'root',
         'PASSWORD': '12345',
         'HOST': '127.0.0.1',  # Replace with the database host if different
-        'PORT': '3306',  # Replace with the database port if different
+        'PORT': '33064',  # Replace with the database port if different
     }
 }
 

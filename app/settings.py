@@ -28,8 +28,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.humanize',
-    'compressor',
     'explorer.apps.ExplorerConfig',
+    'compressor',
 
     'home',
     'clients',
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'contracts',
     'talents',
     'projects',
+    
 
     'django.contrib.staticfiles',
     'allauth',
@@ -58,6 +59,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 MIDDLEWARE = [
+    'allauth.account.middleware.AccountMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

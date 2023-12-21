@@ -51,9 +51,9 @@ def seed_admin():
         is_superuser=True
     )
     User.objects.create_user(
-        username='empire-dhv',
-        email='infoempiredhv@gmail.com',
-        password='empireDHV',
+        username='johnson',
+        email='johnsonmasino@gmail.com',
+        password='1234567890',
         is_staff=True,
         is_active=True,
         is_superuser=False
@@ -268,8 +268,8 @@ with transaction.atomic():
     print('done generating industries')
 
     company = CompanySettings.objects.create(
-        company_name="Empire DHV",
-        company_address="Accra, Ghana",
+        company_name="Johnson Co.",
+        company_address="Kampala, Uganda",
         invoice_prefix="INV|",  # Replace "INV" with your desired default invoice prefix
         quotation_prefix="QUO|",  # Replace "QUO" with your desired default quotation prefix
         client_prefix="CUS|",  # Replace "CUS" with your desired default client prefix
@@ -280,8 +280,8 @@ with transaction.atomic():
         default_tax=18,
         default_discount=11,
         company_account="01008123450",
-        company_bank_name="ABSA BANK GHANA",
-        company_logo='static/empire-dhv-logo.png'
+        company_bank_name="Guranteed Trust Bank",
+        company_logo='static/logo.png'
     )
 
     settings_instance = CompanySettings.objects.first()

@@ -280,7 +280,7 @@ with transaction.atomic():
         default_tax=18,
         default_discount=11,
         company_account="01008123450",
-        company_bank_name="ABSA BANK GHANA",
+        company_bank_name="Guranteed Trust Bank",
         company_logo='static/logo.png'
     )
 

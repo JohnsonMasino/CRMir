@@ -28,8 +28,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.humanize',
-    'explorer.apps.ExplorerConfig',
     'compressor',
+    'explorer.apps.ExplorerConfig',
 
     'home',
     'clients',
@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'contracts',
     'talents',
     'projects',
-    
 
     'django.contrib.staticfiles',
     'allauth',
@@ -59,7 +58,6 @@ AUTHENTICATION_BACKENDS = (
 )
 
 MIDDLEWARE = [
-    'allauth.account.middleware.AccountMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -92,23 +90,23 @@ WSGI_APPLICATION = 'app.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'dhv',
-        'USER': 'root',
-        'PASSWORD': '12345',
-        'HOST': '127.0.0.1',  # Replace with the database host if different
-        'PORT': '3306',  # Replace with the database port if different
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'dhv',
+#         'USER': 'root',
+#         'PASSWORD': '12345',
+#         'HOST': '127.0.0.1',  # Replace with the database host if different
+#         'PORT': '3306',  # Replace with the database port if different
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
